@@ -5,13 +5,13 @@ diffDate(){
 }
 
 dateAuj=$(date +"%m/%d/%Y")
-dateAn=$(date -d "1 year ago" "+%m/%d/%Y")
+dateWeek=$(date -d "1 week ago" "+%m/%d/%Y")
 
-echo "Saisir la date du 1er commit au format mm/dd/yyyy, par defaut l'année dernière ${dateAn}"
+echo "Saisir la date du 1er commit au format mm/dd/yyyy, par defaut la semaine dernière ${dateAn}"
 read dateDebut
 if test -z "$dateDebut"
 then
-    dateDebut=$dateAn
+    dateDebut=$dateWeek
 fi
 
 echo "Saisir la date du dernier commit au format  mm/dd/yyyy, par defaut la date d'aujourd'hui ${dateAuj}"
@@ -51,8 +51,17 @@ diffDate $dateDebut $dateFin
 echo "Nombre de jours commités ${diffDate}"
 echo ""
 
-for i in `seq 1 10`;
+dateProchainCommit=$dateDebut
+
+for i in `seq 1 ${diffDate}`;
 do
     rand=$(shuf -i ${nbCommitMin}-${nbCommitMax} -n 1)
-    echo $rand
+
+    for j in `seq 1 ${rand}`;
+    do
+        echo "${dateProchainCommit} ${j}"
+    done
+
+dateProchainCommit=$(date +%m-%d-%Y -d "$dateDebut + $i day")
+
 done
